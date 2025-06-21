@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Las Delicias de Rosita</title>
+    <style>
+      body {
+        background-color: var(--bg-color, #fff8f0);
+        color: var(--text-color, #333);
+        transition: background-color 0.5s;
+        margin: 0;
+        padding: 0;
+        font-family: "Arial", sans-serif;
+        text-align: center;
+      }
+
+      h1 {
+        color: #d35400;
+        margin: 80px 0 60px;
+        font-size: 2.2rem;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+      }
+
+      #scene {
+        width: 200px;
+        height: 200px;
+        margin: 80px auto;
+        perspective: 800px;
+      }
+
+      #cube {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        transform-style: preserve-3d;
+        transform: rotateX(-20deg) rotateY(20deg);
+        /* SIN transition - eliminado para quitar animaciones */
+      }
+
+      .cube-face {
+        position: absolute;
+        width: 200px;
+        height: 200px;
+        border: 2px solid #333;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: rgba(255, 255, 255, 0.95);
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+      }
+
+      .cube-face img {
+        max-width: 80%;
+        max-height: 60%;
+        pointer-events: none;
+        -webkit-user-drag: none;
+        /* SIN transition - eliminado */
+      }
+
+      .cube-face strong {
+        margin-top: 10px;
+        font-size: 1.1rem;
+        /* SIN transition - eliminado */
+      }
+
+      .cube-face.front {
+        transform: translateZ(100px);
+      }
+
+      .cube-face.back {
+        transform: rotateY(180deg) translateZ(100px);
+      }
+
+      .cube-face.right {
+        transform: rotateY(90deg) translateZ(100px);
+      }
+
+      .cube-face.left {
+        transform: rotateY(-90deg) translateZ(100px);
+      }
+
+      .cube-face.top {
+        transform: rotateX(90deg) translateZ(100px);
+      }
+
+      .cube-face.bottom {
+        transform: rotateX(-90deg) translateZ(100px);
+      }
+
+      .descripcion {
+        width: 80%;
+        margin: 50px auto;
+        padding: 15px;
+        background: var(--desc-bg, #fff);
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        opacity: 0;
+        transition: opacity 0.3s;
+        font-size: 0.95rem;
+      }
+
+      .descripcion.visible {
+        opacity: 1;
+      }
+
+      .galeria {
+		display: none;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 20px;
+		padding: 20px;
+		margin: 60px 0;
+		background: rgba(255, 255, 255, 0.98);
+		border-radius: 10px;
+	  }
+
+
+      .galeria-item {
+        width: 200px;
+        height: 320px;
+        /* Altura fija para todas las tarjetas */
+        text-align: center;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 10px;
+        padding: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+      }
+
+      .galeria-item img {
+        width: 100%;
+        height: 200px;
+        /* Altura fija para todas las imágenes */
+        object-fit: cover;
+        /* Mantiene proporción y recorta si es necesario */
+        border-radius: 10px;
+      }
+
+      .menu-btn {
+        display: block;
+        margin: 90px auto;
+        background: #e67e22;
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 30px;
+        cursor: pointer;
+        font-size: 1.1rem;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s;
+      }
+
+      .menu-btn:hover {
+        background: #d35400;
+        transform: translateY(-2px);
+      }
+
+      /* Prevención de selección */
+      .cube-face,
+      #cube,
+      #scene {
+        -webkit-tap-highlight-color: transparent;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+	  
+	  @media (max-width: 600px) {
+		.galeria {
+			gap: 10px;
+			padding: 10px;
+			margin: 30px 0;
+			border-radius: 5px;
+		}
+		.galeria-item {
+			width: 100vw;
+			max-width: 320px;
+			min-width: 180px;
+			height: auto;
+		}
+	}
+
+    </style>
+  </head>
+
+  <body>
+    <h1>LAS DELICIAS DE ROSITA</h1>
+
+    <div id="scene">
+      <div id="cube">
+        <div
+          class="cube-face front"
+          onclick="mostrarSiNoSeMovio('MERENGON', event)"
+        >
+          <img
+            src="https://i.postimg.cc/kVqpdPmw/merengon.jpg"
+            alt="Merengón"
+            draggable="false"
+          />
+          <strong>Merengón</strong>
+        </div>
+        <div
+          class="cube-face back"
+          onclick="mostrarSiNoSeMovio('TRESLECHES', event)"
+        >
+          <img
+            src="https://i.postimg.cc/fVxrFT6J/tres-leches.jpg"
+            alt="Tres Leches"
+            draggable="false"
+          />
+          <strong>Tres Leches</strong>
+        </div>
+        <div
+          class="cube-face right"
+          onclick="mostrarSiNoSeMovio('CUAJADA', event)"
+        >
+          <img
+            src="https://i.postimg.cc/R6bsf3nb/cuajada.jpg"
+            alt="Cuajada"
+            draggable="false"
+          />
+          <strong>Cuajada</strong>
+        </div>
+        <div
+          class="cube-face left"
+          onclick="mostrarSiNoSeMovio('OBLEAS', event)"
+        >
+          <img
+            src="https://i.postimg.cc/5YtK65jC/obleas.jpg"
+            alt="Obleas"
+            draggable="false"
+          />
+          <strong>Obleas</strong>
+        </div>
+        <div
+          class="cube-face top"
+          onclick="mostrarSiNoSeMovio('FRESAS', event)"
+        >
+          <img
+            src="https://i.postimg.cc/zDHbC7h7/fresas-crema.jpg"
+            alt="Fresas con crema"
+            draggable="false"
+          />
+          <strong>Fresas con crema</strong>
+        </div>
+        <div class="cube-face bottom" onclick="mostrarSiNoSeMovio('QR', event)">
+          <img id="qr-bottom" src="" alt="QR" draggable="false" />
+          <strong>Escanea aquí</strong>
+        </div>
+      </div>
+    </div>
+
+    <button class="menu-btn" onclick="toggleMenu()">
+      Ver Todos los Postres
+    </button>
+
+    <div class="descripcion" id="descripcion"></div>
+
+    <div class="galeria" id="galeria">
+      <div class="galeria-item">
+        <img src="https://i.postimg.cc/kVqpdPmw/merengon.jpg" />
+        <p>
+          Contiene 2 merengues, crema de leche, mango, fresas, guanábana,
+          banano, kiwi y freidjoba.
+        </p>
+      </div>
+      <div class="galeria-item">
+        <img src="https://i.postimg.cc/fVxrFT6J/tres-leches.jpg" />
+        <p>Contiene 3 leches, 3 capas de galleta y 2 de arequipe.</p>
+      </div>
+      <div class="galeria-item">
+        <img src="https://i.postimg.cc/R6bsf3nb/cuajada.jpg" />
+        <p>Textura cremosa y gelatinosa. Toppings: mora, melado, papayuela.</p>
+      </div>
+      <div class="galeria-item">
+        <img src="https://i.postimg.cc/5YtK65jC/obleas.jpg" />
+        <p>
+          Obleas con múltiples toppings: arequipe, crema de leche, chocolate,
+          etc.
+        </p>
+      </div>
+      <div class="galeria-item">
+        <img src="https://i.postimg.cc/zDHbC7h7/fresas-crema.jpg" />
+        <p>Base de fresas con relleno de crema, chocolate y barquillos.</p>
+      </div>
+    </div>
+
+    <script>
+      let touchStartTime = 0;
+      let touchMoved = false;
+
+      // Descripciones y colores
+      const descripciones = {
+        MERENGON:
+          "Contiene 2 merengues uno en la parte inferior y el otro en la parte superior. Tiene crema de leche. Mango, fresas, guanábana, banano, kiwi (frutos amarillos o rojos) y freidjoba.",
+        TRESLECHES:
+          "Contiene 3 leches (dulce leche, crema de leche y leche entera). 3 Capas de galleta y dos de Arequipe.",
+        CUAJADA:
+          "Producto lácteo de textura cremosa y gelatinosa que se obtiene al coagular la leche con cuajo u otras enzimas coagulante. Toppings: Mora, Melado, Papayuela.",
+        OBLEAS:
+          "Toppings: Arequipe, Mora, Chicle, Crema de leche, Grajeas, Queso, Coco, Maní, Chocolate, Salsa de Uchuva, Papayuela, Chantilly, Leche condensada, Chips de chocolate. 1 topping: $4.000 hasta 5 toppings: $8.000.",
+        FRESAS:
+          "Base de fresas, relleno de crema de leche, decoración con chocolate, barquillos y fresas.",
+        QR: "Escanea el código QR para visitar nuestra página web.",
+      };
+
+      const colores = {
+        MERENGON: "#f2eddc",
+        TRESLECHES: "#fffbe0",
+        CUAJADA: "#f0fff7",
+        OBLEAS: "#fff2e6",
+        FRESAS: "#ffe6f0",
+        QR: "#e6f7ff",
+      };
+
+      const coloresTitulo = {
+        MERENGON: "#c9b158",
+        TRESLECHES: "#c9bd54",
+        CUAJADA: "#5dc68e",
+        OBLEAS: "#ed9965",
+        FRESAS: "#db697a",
+        QR: "#7a98e2",
+      };
+
+      const coloresBoton = {
+        MERENGON: "#c9b158",
+        TRESLECHES: "#c9bd54",
+        CUAJADA: "#5dc68e",
+        OBLEAS: "#ed9965",
+        FRESAS: "#db697a",
+        QR: "#7a98e2",
+      };
+
+      // Variables para la rotación
+      let cube = document.getElementById("cube");
+      let scene = document.getElementById("scene");
+      let isDragging = false;
+      let lastX, lastY;
+      let moved = false;
+      let rotateX = -20,
+        rotateY = 20;
+
+      const rotaciones = {
+        front: { x: -10, y: 15 },
+        back: { x: -10, y: 195 },
+        right: { x: -10, y: -75 },
+        left: { x: -10, y: 105 },
+        top: { x: -105, y: 0 },
+        bottom: { x: 75, y: 0 },
+      };
+
+      function mostrar(postre) {
+        const desc = document.getElementById("descripcion");
+        const titulo = document.querySelector("h1");
+        const boton = document.querySelector(".menu-btn");
+        desc.innerText = descripciones[postre];
+        desc.classList.add("visible");
+        document.body.style.setProperty(
+          "--bg-color",
+          colores[postre] || "#fff8f0"
+        );
+        document.body.style.setProperty("--desc-bg", "#fff");
+        document.body.style.setProperty("--text-color", "#333");
+        titulo.style.color = coloresTitulo[postre] || "#d35400";
+        boton.style.background = coloresBoton[postre] || "#e67e22";
+      }
+
+      function mostrarSiNoSeMovio(postre, event) {
+        if (!moved) {
+          mostrar(postre);
+          const cara = getCaraFromPostre(postre);
+          if (cara) {
+            history.pushState(null, null, `?cara=${cara}`);
+          }
+        }
+        event.stopPropagation();
+        event.preventDefault();
+      }
+
+      function getCaraFromPostre(postre) {
+        const mapping = {
+          MERENGON: "front",
+          TRESLECHES: "back",
+          CUAJADA: "right",
+          OBLEAS: "left",
+          FRESAS: "top",
+          QR: "bottom",
+        };
+        return mapping[postre] || "";
+      }
+
+      function toggleMenu() {
+        const galeria = document.getElementById("galeria");
+        galeria.style.display =
+          galeria.style.display === "flex" ? "none" : "flex";
+        // Elimina o comenta la línea siguiente:
+        // if (galeria.style.display === "flex") {
+        //   galeria.scrollIntoView({ behavior: 'smooth' });
+        // }
+      }
+
+      // Tema noche automático
+      const hour = new Date().getHours();
+      if (hour >= 18 || hour < 6) {
+        document.body.style.setProperty("--bg-color", "#1a1a1a");
+        document.body.style.setProperty("--text-color", "#fff");
+        document.body.style.setProperty("--desc-bg", "#333");
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        // QR dinámico
+        const qrImg = document.getElementById("qr-bottom");
+        const currentUrl = window.location.href.split("?")[0];
+        qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(
+          currentUrl + "?cara=bottom"
+        )}`;
+
+        // Rotación inicial por parámetro
+        const urlParams = new URLSearchParams(window.location.search);
+        const caraParam = urlParams.get("cara");
+        if (caraParam && rotaciones[caraParam]) {
+          rotateX = rotaciones[caraParam].x;
+          rotateY = rotaciones[caraParam].y;
+          cube.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+
+          const postre = getPostreFromCara(caraParam);
+          if (postre) mostrar(postre);
+        }
+      });
+
+      function getPostreFromCara(cara) {
+        const mapping = {
+          front: "MERENGON",
+          back: "TRESLECHES",
+          right: "CUAJADA",
+          left: "OBLEAS",
+          top: "FRESAS",
+          bottom: "QR",
+        };
+        return mapping[cara] || "";
+      }
+
+      // Rotación mouse
+      scene.addEventListener("mousedown", function (e) {
+        isDragging = true;
+        lastX = e.clientX;
+        lastY = e.clientY;
+        moved = false;
+      });
+
+      document.addEventListener("mouseup", function () {
+        isDragging = false;
+      });
+
+      document.addEventListener("mousemove", function (e) {
+        if (!isDragging) return;
+        const deltaX = e.clientX - lastX;
+        const deltaY = e.clientY - lastY;
+        if (Math.abs(deltaX) > 3 || Math.abs(deltaY) > 3) moved = true;
+        rotateY += deltaX * 0.5;
+        rotateX -= deltaY * 0.5;
+        cube.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        lastX = e.clientX;
+        lastY = e.clientY;
+      });
+
+      // Rotación touch
+      scene.addEventListener("touchstart", function (e) {
+        isDragging = true;
+        lastX = e.touches[0].clientX;
+        lastY = e.touches[0].clientY;
+        moved = false;
+        touchMoved = false;
+        touchStartTime = Date.now();
+        e.preventDefault();
+      });
+
+      scene.addEventListener("touchmove", function (e) {
+        if (!isDragging) return;
+        const deltaX = e.touches[0].clientX - lastX;
+        const deltaY = e.touches[0].clientY - lastY;
+        if (Math.abs(deltaX) > 3 || Math.abs(deltaY) > 3) {
+          moved = true;
+          touchMoved = true;
+        }
+        rotateY += deltaX * 0.5;
+        rotateX -= deltaY * 0.5;
+        cube.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        lastX = e.touches[0].clientX;
+        lastY = e.touches[0].clientY;
+        e.preventDefault();
+      });
+
+      scene.addEventListener("touchend", function (e) {
+        isDragging = false;
+        // Si NO hubo movimiento y el tap fue corto, simulamos un click en la cara tocada
+        if (!touchMoved && Date.now() - touchStartTime < 350) {
+          // Buscamos la cara bajo el dedo
+          const touch = e.changedTouches[0];
+          const elem = document.elementFromPoint(touch.clientX, touch.clientY);
+          if (elem) {
+            // Si es una cara, o su hijo (img o strong), buscamos la cara
+            let face = elem.closest(".cube-face");
+            if (face) {
+              // Extraemos el postre del onclick de la cara
+              // Ejemplo: onclick="mostrarSiNoSeMovio('MERENGON', event)"
+              let onclick = face.getAttribute("onclick");
+              if (onclick) {
+                let match = onclick.match(/mostrarSiNoSeMovio\('([^']+)'/);
+                if (match) {
+                  mostrarSiNoSeMovio(match[1], e);
+                }
+              }
+            }
+          }
+        }
+      });
+    </script>
+  </body>
+</html>
