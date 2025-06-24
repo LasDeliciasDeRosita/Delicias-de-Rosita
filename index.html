@@ -252,7 +252,7 @@
           <strong>Fresas con crema</strong>
         </div>
         <div class="cube-face bottom" onclick="mostrarSiNoSeMovio('QR', event)">
-          <img id="qr-bottom" src="" alt="QR" draggable="false" />
+          <img src="https://i.postimg.cc/WbvMmW4B/qr-pagina.png" alt="QR" draggable="false" />
           <strong>Escanea aquí</strong>
         </div>
       </div>
@@ -416,12 +416,6 @@
       }
 
       document.addEventListener("DOMContentLoaded", function () {
-        // QR dinámico
-        const qrImg = document.getElementById("qr-bottom");
-        const currentUrl = window.location.href.split("?")[0];
-        qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(
-          currentUrl + "?cara=bottom"
-        )}`;
 
         // Rotación inicial por parámetro
         const urlParams = new URLSearchParams(window.location.search);
